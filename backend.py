@@ -5,6 +5,8 @@ from lib.setup import rooms, settings
 from lib.GPIOSetup import GPIO
 from lib.appliance import Appliance
 from lib import authentication
+from w1thermsensor import W1ThermSensor
+
 app = Flask(__name__)
 
 
@@ -13,6 +15,11 @@ def updateStates(rooms):
 		for j, appliance in enumerate(room['Appliances']):
 			current_appliance = Appliance(appliance)
 			rooms[i]['Appliances'][j]['State'] = current_appliance.getState()
+			if rooms[i]['Appliances'][j]['Type'] == 'Temp':
+				sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, rooms[i]['Appliances'][j]['Address'])
+				rooms[i]['Appliances'][j]['Name'] = sensor.get_temperature()
+				
+
 	return rooms
 
 @app.context_processor
@@ -26,7 +33,7 @@ def home():
 	now = datetime.datetime.now()
 	timeString = now.strftime("%Y-%m-%d %I:%M %p")
 	templateData = {
-		'title' : 'WebGPIO',
+		'title' : 'Auto House',
 		'time': timeString,
 		'rooms' : updateStates(rooms),
 		'refresh_rate' : settings['RefreshRate']*1000
@@ -38,7 +45,7 @@ def home():
 @crossdomain(origin='*')
 def grid():
 	templateData = {
-		'title' : 'WebGPIO',
+		'title' : 'Auto House',
 		'rooms' : updateStates(rooms)
 	}
 	return render_template('grid.html', **templateData)
@@ -50,7 +57,9 @@ def button(room_index, appliance_index):
 	appliance = Appliance(rooms[room_index]['Appliances'][appliance_index])
 	appliance.executeAction()
 	templateData = {
-		'title' : 'WebGPIO',
+		'title' : 'Auto House',
+		'type' : appliance.type,
+		'location' : appliance.location,
 		'state' : appliance.getState(),
 		'room_index' : room_index,
 		'appliance_index' : appliance_index,
@@ -78,13 +87,13 @@ def auth():
 def logout():
 	authentication.removeToken()
 	response = make_response(redirect(url_for('.login')))
-	response.set_cookie('token', '', expires=0, httponly=True, samesite='Lax')
+		response.set_cookie('token', '', expires=0, httponly=True, samesite='Lax')
 	return response
 
 if __name__ == "__main__":
 	if settings['SSL']['Enabled']:
 		app.run(host = settings['Host'], 
-				port = settings['Port'],
+				port = settings['Port'], 
 				threaded = settings['Threaded'], 
 				debug = settings['Debug'], 
 				ssl_context = (settings['cerPath'], settings['keyPath']))
