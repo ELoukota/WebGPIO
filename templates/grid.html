@@ -1,6 +1,6 @@
 {% for i, room in enumerate(rooms) %}
 	<p class='roomtitle'>{{ room['Name'] }}</p>
 	{% for j, Appliance in enumerate(room['Appliances']) %}
-		<span id='button{{ i }}{{ j }}'><button class='container{{ Appliance['State'] }}' onclick='toggle({{ i }},{{ j }})'>{{ Appliance['Name'] }}</button></span>
+		<span id='button{{ i }}{{ j }}'><button title='{{ Appliance['Location'] }}' class='container{{ Appliance['Type'] }}{{ Appliance['State'] }}' onclick='toggle({{ i }},{{ j }})'>{{ Appliance['Name'] }}</button></span>
 	{% endfor %}
 {% endfor %}

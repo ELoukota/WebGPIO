@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+    	<title>WebGPIO</title>
+		<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="57x57" href="/static/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/static/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/static/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/static/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/static/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/static/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/static/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/static/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-icon-180x180.png">
+<link rel="apple-touch-startup-image" href="/static/launch.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/static/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/static/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, initial-scale=.7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+		<style type="text/css">
+		body {
+	position: relative;
+	margin: 0;
+	padding-bottom: 6rem;
+	min-height: 100%;
+	font-family: HelveticaNeue-UltraLight, Arial, sans-serif;
+	background-color:#000000;
+}
+div {
+	display: inline-block;
+}
+input {
+	width: 200px;
+	font-family:HelveticaNeue, Arial, sans-serif;
+	font-size:60%;
+	color:#F7F7F7;
+	background-color: black;
+	border-radius: 5px;
+	border: 1px solid #F7F7F7;
+	padding: 8px;
+	margin: 8px 0px 16px 0px;
+	text-align: center;
+	-webkit-appearance: none;
+	box-sizing: inherit;
+}
+#grid{
+	display: block;
+}
+.roomtitle{
+	font-family:HelveticaNeue-Light, Arial, sans-serif;
+	font-size:200%;
+	font-weight:100;
+	color:#F7F7F7;
+	text-align: center;
+}
+.container1{
+	width: 152px;
+	height: 152px;
+	font-family: HelveticaNeue-UltraLight, Arial, sans-serif;
+	font-size: 200%;
+	color: #000000;
+	background-color: white;
+	border: none;
+	text-align: center;
+	border-radius: 152px;
+	margin: auto 4px 12px 4px;
+	vertical-align: middle;
+}
+.container0{
+	width: 152px;
+	height: 152px;
+	font-family: HelveticaNeue-UltraLight, Arial, sans-serif;
+	font-size: 200%;
+	color: #F7F7F7;
+	background-color: black;
+	border: 1px solid #F7F7F7;
+	text-align: center;
+	border-radius: 152px;
+	margin: auto 4px 12px 4px;
+	vertical-align: middle;
+}
+
+
+.title{
+	font-family:HelveticaNeue, Arial, sans-serif;
+	font-size:300%;
+	font-weight:100;
+	color:#F7F7F7;
+}
+.subtitle{
+	font-family:HelveticaNeue-UltraLight, Arial, sans-serif;
+	font-size:130%;
+	color:#F7F7F7;
+}
+.form{
+	font-family:HelveticaNeue-Light, Arial, sans-serif;
+	font-size:170%;
+	font-weight:100;
+	color:#F7F7F7;
+	text-align: center;
+}
+.footer{
+	font-family:HelveticaNeue-Light, Arial, sans-serif;
+	font-size:100%;
+	color:#F7F7F7;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	padding: 4rem;
+}
+		.spinner {
+  position: relative;
+  top: 30%;
+  left: -6%;
+  z-index: 2;
+}
+
+.light i{
+  background: #fff;
+}
+
+.dark i{
+  background: #000;
+}
+
+
+i {
+  display: block;
+  position: absolute;
+  width: 18px;
+  height: 3px;
+  opacity: 0.2;
+  border-radius: 4px;
+  animation-name: spin;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+
+i:nth-child(1) {
+  transform: rotate(30deg) translateX(40px);
+  animation-delay: 0.08333s;
+}
+
+i:nth-child(2) {
+  transform: rotate(60deg) translateX(40px);
+  animation-delay: 0.16667s;
+}
+
+i:nth-child(3) {
+  transform: rotate(90deg) translateX(40px);
+  animation-delay: 0.25s;
+}
+
+i:nth-child(4) {
+  transform: rotate(120deg) translateX(40px);
+  animation-delay: 0.33333s;
+}
+
+i:nth-child(5) {
+  transform: rotate(150deg) translateX(40px);
+  animation-delay: 0.41667s;
+}
+
+i:nth-child(6) {
+  transform: rotate(180deg) translateX(40px);
+  animation-delay: 0.5s;
+}
+
+i:nth-child(7) {
+  transform: rotate(210deg) translateX(40px);
+  animation-delay: 0.58333s;
+}
+
+i:nth-child(8) {
+  transform: rotate(240deg) translateX(40px);
+  animation-delay: 0.66667s;
+}
+
+i:nth-child(9) {
+  transform: rotate(270deg) translateX(40px);
+  animation-delay: 0.75s;
+}
+
+i:nth-child(10) {
+  transform: rotate(300deg) translateX(40px);
+  animation-delay: 0.83333s;
+}
+
+i:nth-child(11) {
+  transform: rotate(330deg) translateX(40px);
+  animation-delay: 0.91667s;
+}
+
+i:nth-child(12) {
+  transform: rotate(360deg) translateX(40px);
+  animation-delay: 1s;
+}
+
+@keyframes spin {
+  30% {
+    opacity: 1;
+    box-shadow: 0px 0px 6px rgba(255, 255, 255, 0.8);
+  }
+}
+		</style>
+		<script type="text/javascript">
+			
+	var blockingCounter = 0;
+function loading(r,a){
+	containerState = document.getElementById("button"+r+a).firstChild.className;
+	if (containerState == "container0"){
+		document.getElementById("button"+r+a).innerHTML =
+				"<div class='container1'><div class='spinner dark'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+	}
+	if (containerState == "container1"){
+		document.getElementById("button"+r+a).innerHTML =
+				"<div class='container0'><div class='spinner light'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+	}
+}
+function toggle(r,a) {
+	blockingCounter++;
+	loading(r,a);
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4){
+			if (this.status == 200) {
+				document.getElementById("button"+r+a).innerHTML =
+				this.responseText;
+			}
+			blockingCounter--;
+		}
+	};
+	xhttp.open("GET", "button/"+r+"/"+a+"/", true);
+	xhttp.send();
+}
+function grid() {
+	if (blockingCounter == 0){
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200 && blockingCounter == 0) {
+				document.getElementById("grid").innerHTML =
+				this.responseText;
+				}
+			};
+		xhttp.open("GET", "grid/", true);
+		xhttp.send();
+		}
+	}
+window.setInterval(function(){
+	grid()
+}, 5000);
+
+		</script>
+	</head>
+
+	<body>
+		
+	<div id='grid' align="center">
+	
+	<p class='roomtitle'>Bed Room</p>
+	
+		<span id='button00'><button class='container0' onclick='toggle(0,0)'>Fan</button></span>
+	
+		<span id='button01'><button class='container0' onclick='toggle(0,1)'>Front Light</button></span>
+	
+		<span id='button02'><button class='container0' onclick='toggle(0,2)'>Back Light</button></span>
+	
+		<span id='button03'><button class='container0' onclick='toggle(0,3)'>Bright Light</button></span>
+	
+
+	<p class='roomtitle'>Garage</p>
+	
+		<span id='button10'><button class='container0' onclick='toggle(1,0)'>Light</button></span>
+	
+		<span id='button11'><button class='container0' onclick='toggle(1,1)'>Door</button></span>
+	
+
+	<p class='roomtitle'>Scripts</p>
+	
+		<span id='button20'><button class='container1' onclick='toggle(2,0)'>Internet</button></span>
+	
+		<span id='button21'><button class='container0' onclick='toggle(2,1)'>Nginx</button></span>
+	
+
+	</div>
+	
+	</body>
+
+</html>

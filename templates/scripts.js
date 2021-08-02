@@ -1,13 +1,29 @@
 var blockingCounter = 0;
 function loading(r,a){
 	containerState = document.getElementById("button"+r+a).firstChild.className;
-	if (containerState == "container0"){
+	if (containerState == "containerGPIO0"){
 		document.getElementById("button"+r+a).innerHTML =
-				"<div class='container1'><div class='spinner dark'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+				"<div class='containerGPIO1'><div class='spinner dark'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
 	}
-	if (containerState == "container1"){
+	if (containerState == "containerGPIO1"){
 		document.getElementById("button"+r+a).innerHTML =
-				"<div class='container0'><div class='spinner light'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+				"<div class='containerGPIO0'><div class='spinner light'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+	}
+	if (containerState == "containerTemp0"){
+		document.getElementById("button"+r+a).innerHTML =
+				"<div class='containerTemp1'><div class='spinner dark'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+	}
+	if (containerState == "containerTemp1"){
+		document.getElementById("button"+r+a).innerHTML =
+				"<div class='containerTemp0'><div class='spinner light'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+	}
+	if (containerState == "containerScript0"){
+		document.getElementById("button"+r+a).innerHTML =
+				"<div class='containerScript1'><div class='spinner dark'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
+	}
+	if (containerState == "containerScript1"){
+		document.getElementById("button"+r+a).innerHTML =
+				"<div class='containerScript0'><div class='spinner light'><i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i>	<i></i>  <i></i>  <i></i>  <i></i>  <i></i>  <i></i></div></div>";
 	}
 }
 function toggle(r,a) {
