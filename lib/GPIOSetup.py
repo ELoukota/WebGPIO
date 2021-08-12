@@ -1,4 +1,4 @@
-from lib.setup import rooms, settings
+from lib.setup import zones, settings
 
 if settings['Make'] == 'OrangePi':
 	import OPi.GPIO as GPIO
@@ -17,8 +17,8 @@ def initialState(active_value):
 	else:
 		return GPIO.LOW
 
-for room in rooms:
-	for Appliance in room['Appliances']:
+for zone in zones:
+	for Appliance in zone['Appliances']:
 		if Appliance['Type'] == 'GPIO':
 			initial_state = initialState(Appliance['ActiveState'])
 			GPIO.setup(Appliance['Pin'],

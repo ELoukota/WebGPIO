@@ -1,24 +1,26 @@
 import os, sys, yaml
 
+acclData = []
+
 configPath = os.path.join(sys.path[0], "config.yml")
 try:
 	with open(configPath, 'r') as ymlfile:
-	    cfg = yaml.safe_load(ymlfile)
+	    cfg = yaml.load(ymlfile)
 except Exception:
 	print("Config file not found or invalid. Please provide a valid config.yml file. See exampleconfig.yml for reference")
 	exit()
 
 try:
-	rooms = cfg['Rooms']
+	zones = cfg['Zones']
 except Exception:
 	print("config.yml file is not valid. See exampleconfig.yml for reference")
 	exit()
 
 #check for older config file
-for i, room in enumerate(rooms):
-	if 'Accesories' in room:
-		rooms[i]['Appliances'] = rooms[i]['Accesories']
-		rooms[i].pop('Accesories', None)
+for i, zone in enumerate(zones):
+	if 'Accesories' in zone:
+		zones[i]['Appliances'] = zones[i]['Accesories']
+		zones[i].pop('Accesories', None)
 		print("Use Appliances instead of Accesories in config.yml")
 
 if 'Settings' in cfg:
@@ -26,11 +28,14 @@ if 'Settings' in cfg:
 else:
 	settings = {}
 
+if 'Title' not in settings:
+	settings['Title'] = 'Default'
+
 if 'Host' not in settings:
 	settings['Host'] = '0.0.0.0' 
 
 if 'Port' not in settings:
-	settings['Port'] = 8000
+	settings['Port'] = 8080
 
 if 'Threaded' not in settings:
 	settings['Threaded'] = True 
@@ -64,9 +69,9 @@ if 'Inverted' in settings:
 else:
 	GlobalActiveState = 1
 
-for i, room in enumerate(rooms):
-	for j, Appliance in enumerate(room['Appliances']):
+for i, zone in enumerate(zones):
+	for j, Appliance in enumerate(zone['Appliances']):
 		if 'Inverted' in Appliance:
-			rooms[i]['Appliances'][j]['ActiveState'] = 1 - int(Appliance['Inverted'])
+			zones[i]['Appliances'][j]['ActiveState'] = 1 - int(Appliance['Inverted'])
 		else:
-			rooms[i]['Appliances'][j]['ActiveState'] = GlobalActiveState
+			zones[i]['Appliances'][j]['ActiveState'] = GlobalActiveState

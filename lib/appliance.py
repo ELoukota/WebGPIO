@@ -12,15 +12,7 @@ class Appliance:
 		if self.type == 'GPIO':
 			self.pin = attributes['Pin']
 			self.active = attributes['ActiveState']
-			if 'Location' in attributes:
-				self.location = attributes['Location']
-			else:
-				self.location = str(' ')
 		if self.type == 'Script':
-			if 'Location' in attributes:
-				self.location = attributes['Location']
-			else:
-				self.location = str(' ')
 			if 'Timeout' in attributes:
 				self.timeout = "timeout "+str(attributes['Timeout'])+" "
 			else:
@@ -37,10 +29,6 @@ class Appliance:
 				self.timeout = int(attributes['Timeout'])
 			else:
 				self.timeout = 1
-			if 'Location' in attributes:
-				self.location = attributes['Location']
-			else:
-				self.location = str(' ')
 			self.address = attributes['Address']
 
 	def getState(self):
@@ -50,12 +38,11 @@ class Appliance:
 			else:
 				return 0
 		elif self.type == 'Temp':
-			for sensor in W1ThermSensor.get_available_sensors():
-				tmpSensor =+ 1
-			tmpSensors = tmpSensor
-			if tmpSensors > 0:
+			try: 
+				sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, self.address)
 				return 1
-			return 0
+			except:
+				return 0
 		else:
 			returnCode = subprocess.call([self.status_cmd], shell=True)
 			if returnCode == 0:
