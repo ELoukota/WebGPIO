@@ -1,27 +1,80 @@
 import datetime, json
 from flask import Flask, render_template, request, redirect, Markup, make_response, url_for
 from lib.cors import crossdomain
-from lib.setup import rooms, settings
+from lib.setup import zones, settings
 from lib.GPIOSetup import GPIO
 from lib.appliance import Appliance
 from lib import authentication
 from w1thermsensor import W1ThermSensor
+import w1thermsensor
+
+import mpu6050
+from mpu6050 import mpu6050
+from time import sleep
 
 app = Flask(__name__)
 
+GridEnabled = True
+LevelEnabled = True
 
-def updateStates(rooms):
-	for i, room in enumerate(rooms):
-		for j, appliance in enumerate(room['Appliances']):
-			current_appliance = Appliance(appliance)
-			rooms[i]['Appliances'][j]['State'] = current_appliance.getState()
-			if rooms[i]['Appliances'][j]['Type'] == 'Temp':
-				sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, rooms[i]['Appliances'][j]['Address'])
-				rooms[i]['Appliances'][j]['Name'] = sensor.get_temperature()
-				
+try:
+	acclsensor = mpu6050(0x68)
+	my_scale = 100
+	samples = 5
+except:
+	acclsensor = []
+	my_scale = 100
+	samples = 5
+	LevelEnabled = False
 
-	return rooms
+	deadZoneHi = 0.05
+	deadZoneLow = -0.05
 
+	AccelOffsetX = -575
+	AccelOffsetY = 25
+	AccelOffsetZ = 0
+
+def updateAccl():
+	loopz = 0
+	ax = 0
+	ay = 0
+	if (LevelEnabled):
+		while loopz < samples:
+			accel_data = acclsensor.get_accel_data(False, AccelOffsetX, AccelOffsetY, AccelOffsetZ)
+			ax = ax + accel_data['x']
+			ay = ay + accel_data['y']
+			sleep(.1)
+			loopz = loopz + 1
+		ax = ax / samples
+		ay = ay / samples
+		ax = round(ax,6)
+		ay = round(ay,6)
+		if ax < deadZoneHi and ax > deadZoneLow:
+			ax = 0
+		if ay < deadZoneHi and ay > deadZoneLow:
+			ay = 0
+		ax = ax * my_scale
+		ay = ay * my_scale
+		return {'x': ax, 'y': ay}
+	else:
+		return {'x': 0, 'y': 0}
+
+def updateStates(zones):
+	if (GridEnabled):
+		for i, zone in enumerate(zones):
+			for j, appliance in enumerate(zone['Appliances']):
+				current_appliance = Appliance(appliance)
+				zones[i]['Appliances'][j]['State'] = current_appliance.getState()
+				if zones[i]['Appliances'][j]['Type'] == 'Temp':
+					try: 
+						sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, zones[i]['Appliances'][j]['Address'])
+						zones[i]['Appliances'][j]['Name'] = sensor.get_temperature()
+					except:
+						zones[i]['Appliances'][j]['Name'] = 'Not Found'
+		return zones
+	else:
+		pass
+	
 @app.context_processor
 def inject_enumerate():
     return dict(enumerate=enumerate)
@@ -32,10 +85,15 @@ def inject_enumerate():
 def home():
 	now = datetime.datetime.now()
 	timeString = now.strftime("%Y-%m-%d %I:%M %p")
+	Data = updateAccl()
+	Xret = Data['x']
+	Yret = Data ['y']
 	templateData = {
-		'title' : 'Auto House',
+		'title' : settings['Title'],
 		'time': timeString,
-		'rooms' : updateStates(rooms),
+		'zones' : updateStates(zones),
+		'Xvar' : int(Xret),
+		'Yvar' : int(Yret),
 		'refresh_rate' : settings['RefreshRate']*1000
 	}
 	return render_template('home.html', **templateData)
@@ -45,27 +103,58 @@ def home():
 @crossdomain(origin='*')
 def grid():
 	templateData = {
-		'title' : 'Auto House',
-		'rooms' : updateStates(rooms)
+		'title' : settings['Title'],
+		'zones' : updateStates(zones)
 	}
 	return render_template('grid.html', **templateData)
 
-@app.route("/button/<int:room_index>/<int:appliance_index>/")
+@app.route("/level/")
 @authentication.login_required
 @crossdomain(origin='*')
-def button(room_index, appliance_index):
-	appliance = Appliance(rooms[room_index]['Appliances'][appliance_index])
+def level():
+	Data = updateAccl()
+	Xret = Data['x']
+	Yret = Data ['y']
+	templateData = {
+		'title' : settings['Title'],
+		'Xvar' : int(Xret),
+		'Yvar' : int(Yret)
+	}
+	return render_template('level.html', **templateData)
+
+@app.route("/button/<int:zone_index>/<int:appliance_index>/")
+@authentication.login_required
+@crossdomain(origin='*')
+def button(zone_index, appliance_index):
+	appliance = Appliance(zones[zone_index]['Appliances'][appliance_index])
 	appliance.executeAction()
 	templateData = {
-		'title' : 'Auto House',
+		'title' : settings['Title'],
 		'type' : appliance.type,
-		'location' : appliance.location,
 		'state' : appliance.getState(),
-		'room_index' : room_index,
+		'zone_index' : zone_index,
 		'appliance_index' : appliance_index,
 		'name' : appliance.name
 	}
 	return render_template('button.html', **templateData)
+
+@app.route("/toggle/<int:module>/<int:enabled>/")
+@authentication.login_required
+@crossdomain(origin='*')
+def toggle(module, enabled):
+	if module == 0:
+		if enabled == 1:
+			GridEnabled = True
+		else:
+			GridEnabled = False
+	elif module == 1:
+		if enabled == 1:
+			LevelEnabled = True
+		else:
+			LevelEnabled = False
+	else:
+		pass
+	return
 
 @app.route("/login/")
 def login():
@@ -79,7 +168,7 @@ def auth():
 		if token:
 			expiry_date = datetime.datetime.now() + datetime.timedelta(days=30)
 			response = make_response(redirect(url_for('.home')))
-			response.set_cookie('token', token, expires=expiry_date, httponly=True, samesite='Lax')
+			response.set_cookie('token', token, expires=expiry_date)
 			return response
 	return redirect(url_for('.login'))
 
@@ -87,7 +176,7 @@ def auth():
 def logout():
 	authentication.removeToken()
 	response = make_response(redirect(url_for('.login')))
-		response.set_cookie('token', '', expires=0, httponly=True, samesite='Lax')
+	response.set_cookie('token', '', expires=0)
 	return response
 
 if __name__ == "__main__":

@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
 {% block scripts %}
-	{% include "scripts.js" %}
+{% include "scripts.js" %}
 {% endblock %}
 {% block body %}
-	<div id='grid' align="center">
-	{% include "grid.html" %}
-	</div>
+	<div id=spacerB></div>
+	<div id=webButtons>{% include "webbuttons.html" %}</div>
+	<div id=spacerB></div>
+	<div id='grid'>{% include "grid.html" %}</div>
+	<div id=spacerB></div>
+	<div id='level'>{% include "level.html" %}</div>
 {% endblock %}

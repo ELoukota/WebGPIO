@@ -1,6 +1,8 @@
-{% for i, room in enumerate(rooms) %}
-	<p class='roomtitle'>{{ room['Name'] }}</p>
-	{% for j, Appliance in enumerate(room['Appliances']) %}
-		<span id='button{{ i }}{{ j }}'><button title='{{ Appliance['Location'] }}' class='container{{ Appliance['Type'] }}{{ Appliance['State'] }}' onclick='toggle({{ i }},{{ j }})'>{{ Appliance['Name'] }}</button></span>
+{% for i, zone in enumerate(zones) %}
+	<div class="block{{ loop.cycle('L', 'R') }}">
+	<p class='zonetitle{{ loop.cycle('0', '1', '2', '3') }}'>{{ zone['Name'] }}</p>
+	{% for j, Appliance in enumerate(zone['Appliances']) %}
+		<span id='button{{ i }}{{ j }}'><button title='{{ Appliance['Location'] }}' class='container{{ Appliance['Type'] }}{{ Appliance['State'] }}' onclick='toggle({{ i }},{{ j }})'><span class='btnText'>{{ Appliance['Name'] }}</span></button></span>
 	{% endfor %}
+	</div>
 {% endfor %}

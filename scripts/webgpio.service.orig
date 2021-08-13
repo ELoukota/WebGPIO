@@ -4,8 +4,8 @@ After=multi-user.target
 
 [Service]
 Type=simple
-User=webuser
-ExecStart=/usr/bin/python3 /var/www/WebGPIO/backend.py
+User=pi
+ExecStart=/usr/bin/python3 ${HOME}/WebGPIO/backend.py
 KillMode=process
 Restart=on-failure
 RestartSec=60s

@@ -1,21 +1,24 @@
 .spinner {
   position: relative;
-  top: 30%;
-  left: -12%;
+  display: block;
+  top: -4px;
+  left: -12px;
   z-index: 2;
 }
 
 .light i{
-	background: #D58600;
+  background: #e7b938;
+  border: 2px solid #902700;
 }
 
 .dark i{
-	background: #00398D;
+  background: #328ece;
+  border: 2px solid #1216A1;
 }
 
 
 i {
-  display: block;
+  display: inline-block;
   position: absolute;
   width: 18px;
   height: 3px;
