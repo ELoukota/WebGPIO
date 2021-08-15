@@ -5,7 +5,7 @@ acclData = []
 configPath = os.path.join(sys.path[0], "config.yml")
 try:
 	with open(configPath, 'r') as ymlfile:
-	    cfg = yaml.load(ymlfile)
+	    cfg = yaml.safe_load(ymlfile)
 except Exception:
 	print("Config file not found or invalid. Please provide a valid config.yml file. See exampleconfig.yml for reference")
 	exit()
