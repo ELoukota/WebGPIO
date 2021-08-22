@@ -3,10 +3,18 @@
 {% include "scripts.js" %}
 {% endblock %}
 {% block body %}
-	<div id=spacerB></div>
-	<div id=webButtons>{% include "webbuttons.html" %}</div>
-	<div id=spacerB></div>
-	<div id='grid'>{% include "grid.html" %}</div>
-	<div id=spacerB></div>
-	<div id='level'>{% include "level.html" %}</div>
+{% if ModLevelEnabled %}
+<!-- If the mod is enabled then enable the buttons, GPIO interface, and level display. -->
+<div id=spacerB></div>
+<div id=webButtons>{% include "webbuttons.html" %}</div>
+<div id=spacerB></div>
+<div id='grid'>{% include "grid.html" %}</div>
+<div id=spacerB></div>
+<div id='level'>{% include "level.html" %}</div>
+{% else %}
+<!-- If not loaded then just load the GPIO interface. -->
+<div id=spacerB></div>
+<div id='grid'>{% include "grid.html" %}</div>
+<div id=spacerB></div>
+{% endif %}
 {% endblock %}

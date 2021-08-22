@@ -7,32 +7,52 @@ from lib.appliance import Appliance
 from lib import authentication
 from w1thermsensor import W1ThermSensor
 import w1thermsensor
-
 import mpu6050
 from mpu6050 import mpu6050
 from time import sleep
+# from flask.logging import default_handler
+# from logging.config import dictConfig
+
+# dictConfig({
+#     'version': 1,
+#     'formatters': {'default': {
+#         'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+#     }},
+#     'handlers': {'wsgi': {
+#         'class': 'logging.StreamHandler',
+#         'stream': 'ext://flask.logging.wsgi_errors_stream',
+#         'formatter': 'default'
+#     }},
+#     'root': {
+#         'level': 'INFO',
+#         'handlers': ['wsgi']
+#     }
+# })
 
 app = Flask(__name__)
+
+if settings['Mods']['EnableMPU6050'] == True:
+	ModLevelEnabled = True
+else:
+	ModLevelEnabled = False
 
 GridEnabled = True
 LevelEnabled = True
 
 try:
 	acclsensor = mpu6050(0x68)
-	my_scale = 100
-	samples = 5
 except:
 	acclsensor = []
-	my_scale = 100
-	samples = 5
 	LevelEnabled = False
 
-	deadZoneHi = 0.05
-	deadZoneLow = -0.05
+my_scale = 100
+samples = 5
+deadZoneHi = 0.05
+deadZoneLow = -0.05
+AccelOffsetX = -575
+AccelOffsetY = 25
+AccelOffsetZ = 0
 
-	AccelOffsetX = -575
-	AccelOffsetY = 25
-	AccelOffsetZ = 0
 
 def updateAccl():
 	loopz = 0
@@ -94,7 +114,8 @@ def home():
 		'zones' : updateStates(zones),
 		'Xvar' : int(Xret),
 		'Yvar' : int(Yret),
-		'refresh_rate' : settings['RefreshRate']*1000
+		'refresh_rate' : settings['RefreshRate']*1000,
+		'ModLevelEnabled' : ModLevelEnabled
 	}
 	return render_template('home.html', **templateData)
 

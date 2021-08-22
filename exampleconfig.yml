@@ -1,50 +1,80 @@
 ---
-Rooms:
-  - Name: Bed Room
+---
+Zones:
+  - Name: Computer Area
     Appliances:
-      - Name: Fan
-        Type: GPIO
-        Pin: 18
+      - Name: AirTemp
+        Location: Inside Temp
+        Type: Temp
+        Address: 00000336fcfc
       - Name: Front Light
         Type: GPIO
-        Pin: 17
-      - Name: Back Light
-        Type: GPIO
-        Pin: 27
-      - Name: Bright Light
-        Type: GPIO
-        Pin: 22
-  - Name: Garage
-    Appliances:
-      - Name: Light
-        Type: GPIO
         Pin: 23
-      - Name: Door
+      - Name: Bed Light
         Type: GPIO
         Pin: 24
-        Duration: 2
+
+  - Name: Edward's Room
+    Appliances:
+      - Name: AirTemp
+        Location: Inside Room
+        Type: Temp
+        Address: 000002cd96b7
+      - Name: Room Light
+        Type: GPIO
+        Pin: 17
+      - Name: Night Light
+        Type: GPIO
+        Pin: 27
+        Inverted: True
+
+  - Name: Rhys's Room
+    Appliances:
+      - Name: AirTemp
+        Location: Inside Room
+        Type: Temp
+        Address: 0000033723fc
+      - Name: Room Light
+        Type: GPIO
+        Pin: 22
+      - Name: Night Light
+        Type: GPIO
+        Pin: 25
+        Duration: 300
+
   - Name: Scripts
     Appliances:
       - Name: Internet
         Type: Script
         Status: ping -c 1 8.8.8.8 > /dev/null
         Timeout: 0.3
-      - Name: Nginx
+      - Name: Apache
         Type: Script
-        Status: sudo systemctl is-active --quiet nginx 2> /dev/null
+        Status: sudo systemctl is-active --quiet apache2 2> /dev/null
         Action: 
-          On: sudo systemctl start nginx
-          Off: sudo systemctl stop nginx
+          On: sudo systemctl start apache2
+          Off: sudo systemctl stop apache2
+      - Name: proFTPd
+        Type: Script
+        Status: sudo systemctl is-active --quiet proftpd 2> /dev/null
+        Action: 
+          On: sudo systemctl start proftpd
+          Off: sudo systemctl stop proftpd
 
 
 #Settings:
+#  Title: WebGPIO
+#  GPIOMode: BOARD
 #  Host: 0.0.0.0
-#  Port: 8000
-#  Debug: True
+#  Port: 8080
+#  Debug: false
 #  SSL:
 #    Enabled: False
 #    Path: default
 #    Certificate: WebGPIO.cer
 #    Key: WebGPIO.key
 #  Inverted: False
-#  RefreshRate: 4
+# RefreshRate: 5
+# Mods:
+#   EnableMPU6050: True
+#   EnableDallasTempature: True

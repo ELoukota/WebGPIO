@@ -12,7 +12,7 @@ $py     = $height -22;
 $orange = imagecolorallocate($im, 231, 185, 56);
 $blue = imagecolorallocate($im, 50, 142, 206);
 
-$im     = $image = @imagecreate($width, $height);
+$im = @imagecreate($width, $height);
 
 if ($type == 'GPIO' && $state == 1) {
 	$background_color = imagecolorallocate($im, 231, 185, 56);

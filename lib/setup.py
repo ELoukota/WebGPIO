@@ -35,7 +35,7 @@ if 'Host' not in settings:
 	settings['Host'] = '0.0.0.0' 
 
 if 'Port' not in settings:
-	settings['Port'] = 8080
+	settings['Port'] = 8000
 
 if 'Threaded' not in settings:
 	settings['Threaded'] = True 
@@ -63,7 +63,6 @@ if 'GPIOMode' not in settings:
 if 'Make' not in settings:
 	settings['Make'] = "RaspberryPi"
 
-
 if 'Inverted' in settings:
 	GlobalActiveState = 1 - int(settings['Inverted'])
 else:
@@ -75,3 +74,12 @@ for i, zone in enumerate(zones):
 			zones[i]['Appliances'][j]['ActiveState'] = 1 - int(Appliance['Inverted'])
 		else:
 			zones[i]['Appliances'][j]['ActiveState'] = GlobalActiveState
+
+if 'Mods' in settings:
+	if 'EnableMPU6050' not in settings['Mods']:
+		settings['Mods']['EnableMPU6050'] = False
+	if 'EnableDallasTempature' not in settings['Mods']:
+		settings['Mods']['EnableDallasTempature'] = False
+else:
+	settings['Mods']['EnableMPU6050'] = False
+	settings['Mods']['EnableDallasTempature'] = False

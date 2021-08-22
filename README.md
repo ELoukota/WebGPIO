@@ -1,15 +1,30 @@
 # WebGPIO
-A simple web UI for controlling the GPIO pins on a Raspberry Pi.
+A mostly simple web UI for controlling the GPIO pins on a Raspberry Pi. (Forked from https://github.com/ThisIsQasim/WebGPIO)
 
-To setup make sure you have flask installed
+UI has been updated to provide more options and to allow loading of modules like using an MPU6050 as a leveling device.
 
-    sudo apt install python3-pip libpython3-dev
-    sudo pip3 install -r requirements.txt
+To setup make sure you have:
+Python3:
+    python3-pip
+    libpython3-dev
+    (setuptools
+    wheel
+    flask
+    pyyaml
+    smbus2) in requirements.txt
+ apache2:
+    php:
+        exif
+        gd
+        imagick
 
-Clone the repo and create a config file named config.yml in the repo folder. Define pin numbers, in BCM format, grouped into "Rooms" and "Appliances" in config.yml. See exampleconfig.yml for reference
+    
 
-    git clone https://github.com/ThisIsQasim/WebGPIO
+Clone the repo and create a config file named config.yml in the repo folder. Define pin numbers, in BCM format, grouped into "Zones" and "Appliances" in config.yml. See exampleconfig.yml for reference
+
+    git clone https://github.com/ELoukota/WebGPIO
     cd WebGPIO
+    sudo pip3 install -r requirements.txt (if you havent already installed the python3 requirements)
     cp exampleconfig.yml config.yml
 
 Run with python
