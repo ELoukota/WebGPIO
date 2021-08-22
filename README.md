@@ -1,7 +1,5 @@
 # WebGPIO
-A mostly simple web UI for controlling the GPIO pins on a Raspberry Pi. (Forked from https://github.com/ThisIsQasim/WebGPIO)
-
-UI has been updated to provide more options and to allow loading of modules like using an MPU6050 as a leveling device.
+A simple web UI for controlling the GPIO pins on a Raspberry Pi. (Forked from https://github.com/ThisIsQasim/WebGPIO)
 
 To setup make sure you have:
 Python3:
@@ -13,7 +11,7 @@ Python3:
     pyyaml
     smbus2) in requirements.txt
  apache2:
-    php:
+    php7:
         exif
         gd
         imagick
