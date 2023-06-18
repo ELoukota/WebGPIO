@@ -54,7 +54,7 @@ AccelOffsetY = 25
 AccelOffsetZ = 0
 
 
-def updateAccl():
+def updateLevel():
 	loopz = 0
 	ax = 0
 	ay = 0
@@ -78,6 +78,9 @@ def updateAccl():
 		return {'x': ax, 'y': ay}
 	else:
 		return {'x': 0, 'y': 0}
+
+def btnWatch():
+	
 
 def updateStates(zones):
 	if (GridEnabled):
@@ -105,7 +108,7 @@ def inject_enumerate():
 def home():
 	now = datetime.datetime.now()
 	timeString = now.strftime("%Y-%m-%d %I:%M %p")
-	Data = updateAccl()
+	Data = updateLevel()
 	Xret = Data['x']
 	Yret = Data ['y']
 	templateData = {
@@ -133,7 +136,7 @@ def grid():
 @authentication.login_required
 @crossdomain(origin='*')
 def level():
-	Data = updateAccl()
+	Data = updateLevel()
 	Xret = Data['x']
 	Yret = Data ['y']
 	templateData = {

@@ -1,5 +1,8 @@
 # WebGPIO
-A simple web UI for controlling the GPIO pins on a Raspberry Pi. (Forked from https://github.com/ThisIsQasim/WebGPIO)
+A web UI for controlling the GPIO pins on a Raspberry Pi. (Forked from https://github.com/ThisIsQasim/WebGPIO)
+
+Coded the layout to use CSS and apache2/php to dynamicly create the buttons and other features.
+Added modules for Dallas Tempature sensors, and an MPU6050 as a leveling indicator.
 
 To setup make sure you have:
 Python3:
@@ -11,7 +14,7 @@ Python3:
     pyyaml
     smbus2) in requirements.txt
  apache2:
-    php7:
+    php:
         exif
         gd
         imagick
